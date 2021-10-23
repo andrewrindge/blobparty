@@ -19,6 +19,9 @@ server.listen(PORT, ()=> {
 
 io.on("connection", (socket) => {
     console.log("Made socket connection", socket.id);
+    socket.on("disconnect", function(data) {
+        console.log(socket.id, "Disconnected")
+    })
 });
 
 setInterval(function() {

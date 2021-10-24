@@ -29,7 +29,12 @@ module.exports = (io) => {
         }
         room.players[socket.id] = init
         // Give the client the player's initial state
-        socket.emit("init", init)
+        socket.on("init", function() {
+            socket.emit("init", {
+                id: socket.id,
+                data: init
+            })
+        })
 
         io.sockets.emit("players", room.players)
 
@@ -43,6 +48,13 @@ module.exports = (io) => {
 
         socket.on("requestPlayers", function() {
             socket.emit("players", room.players)
+        })
+
+        socket.on("updatePosition", function(data) {
+            io.sockets.emit("updatePosition", {
+                id: socket.id,
+                position: data
+            })
         })
 
         socket.on("joinSnake", function(data) {

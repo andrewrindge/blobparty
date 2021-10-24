@@ -8,5 +8,7 @@ chatBox.onkeydown = function(e){
     if (keyCode == 'Enter' && chatBox.value){
         socket.emit("chat-message", chatBox.value)
         chatBox.value = ""
+    } else if (keyCode == 'Space') {
+        chatBox.value += " "
     }
 }

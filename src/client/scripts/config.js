@@ -11,5 +11,9 @@ export default {
     dom: {
         createContainer: true,
     },
-    scene: [],
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
 };

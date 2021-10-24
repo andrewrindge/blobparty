@@ -1,7 +1,3 @@
-// this is the home menu location where the game will launch from
-// maybe incorporated into lobby set up where players will meet up
-// restart -> home -> snake
-
 import Phaser from "phaser";
 
 export default class Home extends Phaser.Scene {
@@ -14,12 +10,12 @@ export default class Home extends Phaser.Scene {
         // (how image will be referred to, path to image file)
 
         // background image
-        this.load.image('background', './assets/images/background.png');
+        this.load.image('lobbybackground', '../assets/lobbybackground.png');
         // images for arrow keys
-        this.load.image('rightArrow', './assets/images/rightArrow.png');
-        this.load.image('leftArrow', './assets/images/leftArrow.png');
-        this.load.image('upArrow', './assets/images/upArrow.png');
-        this.load.image('downArrow', './assets/images/downArrow.png');
+        // this.load.image('rightArrow', './assets/images/rightArrow.png');
+        // this.load.image('leftArrow', './assets/images/leftArrow.png');
+        // this.load.image('upArrow', './assets/images/upArrow.png');
+        // this.load.image('downArrow', './assets/images/downArrow.png');
     }
 
     create () {
@@ -28,13 +24,13 @@ export default class Home extends Phaser.Scene {
         // x, y, 'name of image to display', calling method to start game, in this
 
         // setting the background image
-        this.add.image(0, 0, 'background').setOrigin(0);
+        this.add.image(0, 0, 'lobbybackground').setOrigin(0);
 
         // setting the arrow images
-        this.add.image(10, 10, 'rightArrow');
-        this.add.image(10, 20, 'leftArrow');
-        this.add.image(10, 30, 'upArrow');
-        this.add.image(10, 40, 'downArrow');
+        // this.add.image(10, 10, 'rightArrow');
+        // this.add.image(10, 20, 'leftArrow');
+        // this.add.image(10, 30, 'upArrow');
+        // this.add.image(10, 40, 'downArrow');
 
         // setting the blobs images (still?)
 

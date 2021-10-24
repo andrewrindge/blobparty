@@ -17,13 +17,12 @@ module.exports = (io) => {
         // Properties such as which key to play as during the snake
         // game can be added.
         init = {
-            color: "yellow",
             position: {
-                x: 0,
-                y: 0
+                x: Math.random() * 400,
+                y: Math.random() * 400,
             }
         }
-    
+        
         // Give the client the player's initial state
         socket.emit("init", init)
     

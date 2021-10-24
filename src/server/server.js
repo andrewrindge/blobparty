@@ -29,4 +29,4 @@ server.listen(PORT, ()=> {
     console.log(`Server is up on port ${PORT}.`)
 });
 
-require("./socket")(io);
+require("./socket/socketindex")(io);

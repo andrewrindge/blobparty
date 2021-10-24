@@ -1,15 +1,14 @@
-import Phaser from "phaser";
-
-export default class Lobby extends Phaser.Scene {
+class Lobby extends Phaser.Scene {
     constructor() {
-        super("Lobby");
+        super({key: "Lobby"})
     }
 
-    preload() {}
+    preload() {
+        this.load.image("blob", "assets/purpleblobstill.png")
+    }
 
     create() {
-        const scene = this;
-        this.socket = io();
+        this.image = this.add.image(400.4, 300, "blob");
     }
-    update();
 }
+

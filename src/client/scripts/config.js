@@ -1,4 +1,4 @@
-export default {
+const config = {
     type: Phaser.AUTO,
     width: 600,
     height: 450,
@@ -11,9 +11,5 @@ export default {
     dom: {
         createContainer: true,
     },
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    }
+    scene: [],
 };

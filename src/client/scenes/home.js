@@ -8,9 +8,8 @@ export default class Home extends Phaser.Scene {
 
     preload() {
         // (how image will be referred to, path to image file)
-
         // background image
-        this.load.image('lobbybackground', '../assets/lobbybackground.png');
+        this.load.image('lobbybackground', '/assets/lobbybackground.png');
         // images for arrow keys
         // this.load.image('rightArrow', './assets/images/rightArrow.png');
         // this.load.image('leftArrow', './assets/images/leftArrow.png');

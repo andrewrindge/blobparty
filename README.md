@@ -4,4 +4,4 @@ Looking for a better, more engaging way to connect with your friends in a virtua
 
 A full-stack web application, backend built with Node.js and Express.js which interact with the Socket.IO library and a JavaScript frontend.
 
-Designed and built by Hugh March, David Song, Jaela Field & Andrew Rindge for the DubHacks 2021 Hackathons.
+Designed and built by Hugh March, David Song, Jaela Field & Andrew Rindge for the DubHacks 2021 Hackathon.

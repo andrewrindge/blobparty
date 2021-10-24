@@ -1,7 +1,7 @@
 const room = {
     users: [],
     gameScore: [],
-    players: new Set,
+    players: {},
     numOfPlayers: 0
 }
 
@@ -11,9 +11,10 @@ module.exports = (io) => {
 
         socket.on("disconnect", function(data) {
             console.log(socket.id, "Disconnected")
-            room.players.delete(socket.id)
+            delete room.players[socket.id]
 
             io.sockets.emit("playerDisconnect", socket.id)
+            io.sockets.emit("players", room.players)
         })
 
         // Initial state of the new player that just joined.
@@ -26,9 +27,8 @@ module.exports = (io) => {
                 y: Math.random() * 400 + 100,
             }
         }
-        socket.emit("players", Array.from(room.players))
-
-        room.players.add(socket.id)
+        room.players[socket.id] = init
+        io.sockets.emit("players", room.players)
 
         // Give the client the player's initial state
         socket.emit("init", init)

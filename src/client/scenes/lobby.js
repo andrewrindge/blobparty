@@ -9,6 +9,7 @@ export default class Lobby extends Phaser.Scene {
 
     create() {
         const scene = this;
+        this.socket = io();
     }
     update();
 }

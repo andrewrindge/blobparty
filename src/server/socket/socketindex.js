@@ -8,8 +8,11 @@ const room = {
 module.exports = (io) => {
     io.on("connection", (socket) => {
         console.log("Made socket connection", socket.id);
+
         socket.on("disconnect", function(data) {
             console.log(socket.id, "Disconnected")
+
+            io.sockets.emit("playerDisconnect", socket.id)
         })
     
         // Initial state of the new player that just joined.
@@ -18,8 +21,8 @@ module.exports = (io) => {
         // game can be added.
         init = {
             position: {
-                x: Math.random() * 400,
-                y: Math.random() * 400,
+                x: Math.random() * 400 + 100,
+                y: Math.random() * 400 + 100,
             }
         }
         
@@ -40,7 +43,7 @@ module.exports = (io) => {
             socket.join("snake")
             io.to("snake").emit("joinedSnake", socket.id)
         })
-    
+
         socket.on("keyPress", function(key) {
             // TODO: Register the movement. When the key is pressed down, continually move
             // the player in that direction.

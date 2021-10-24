@@ -1,4 +1,5 @@
 class Lobby extends Phaser.Scene {
+    counter = 0;
 
     constructor() {
         super({key: "Lobby"})
@@ -15,7 +16,6 @@ class Lobby extends Phaser.Scene {
     }
 
     create() {
-        let counter = 0;
         const scene = this
         scene.players = {}
         scene.initialized = false
@@ -56,7 +56,7 @@ class Lobby extends Phaser.Scene {
             })
 
             socket.on("updatePosition", function(data) {
-                if (data.id == scene.myId) {
+                if (data.id === scene.myId) {
                     return
                 }
 
@@ -73,11 +73,11 @@ class Lobby extends Phaser.Scene {
     addPlayer(scene, id, data) {
         scene.players[id] = data
 
-        if (id == scene.myId) {
+        if (id === scene.myId) {
             const sprite = scene.physics.add
                 .sprite(data.position.x,
                     data.position.y,
-                    "pink"
+                    this.getTypes()
                 )
             sprite.setCollideWorldBounds(true);
             scene.players[id].sprite = sprite;
@@ -85,9 +85,22 @@ class Lobby extends Phaser.Scene {
             const sprite = scene.add.sprite(
                 data.position.x,
                 data.position.y,
-                "pink"
+                this.getTypes()
             );
             scene.players[id].sprite = sprite;
+        }
+        this.counter++;
+    }
+
+    getTypes() {
+        if (this.counter === 0) {
+            return "pink";
+        } else if (this.counter === 1) {
+            return "green";
+        } else if (this.counter === 2) {
+            return "purple";
+        } else if (this.counter === 3) {
+            return "yellow";
         }
     }
 

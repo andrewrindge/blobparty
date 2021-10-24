@@ -32,25 +32,16 @@ class Lobby extends Phaser.Scene {
                     scene.initialized = true;
                     for (const id in data) {
                         scene.addPlayer(scene, id, data[id])
-                        //scene.players[id] = data[id]
-                        //console.log(`Add player: id: ${id}, data: ${data[id]}`)
-                        //console.log(scene.players)
                     }
                 }
             })
 
             socket.on("joined", function(data) {
                 scene.addPlayer(scene, data.id, data.data)
-                //scene.players[data.id] = data.data
-                //console.log(`Add player: id: ${data.id}, data: ${data.data}`)
-                //console.log(scene.players)
             })
 
             socket.on("left", function(data) {
                 scene.removePlayer(scene, data)
-                //delete scene.players[data]
-
-                //console.log(scene.players)
             })
 
             socket.on("updatePosition", function(data) {

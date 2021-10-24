@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/dubsnake.iml" filepath="$PROJECT_DIR$/.idea/dubsnake.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/blobparty.iml" filepath="$PROJECT_DIR$/.idea/blobparty.iml" />
     </modules>
   </component>
 </project>

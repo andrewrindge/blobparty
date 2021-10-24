@@ -5,12 +5,15 @@ const room = {
     // numOfPlayers: 0
 }
 
+const players = new Set()
+
 module.exports = (io) => {
     io.on("connection", (socket) => {
         console.log("Made socket connection", socket.id);
 
         socket.on("disconnect", function(data) {
             console.log(socket.id, "Disconnected")
+            players.delete(socket.id)
 
             io.sockets.emit("playerDisconnect", socket.id)
         })
@@ -25,6 +28,9 @@ module.exports = (io) => {
                 y: Math.random() * 400 + 100,
             }
         }
+        socket.emit("players", Array.from(players))
+
+        players.add(socket.id)
         
         // Give the client the player's initial state
         socket.emit("init", init)

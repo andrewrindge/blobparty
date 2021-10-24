@@ -32,7 +32,7 @@ module.exports = (io) => {
             init: init
         })
         // Adds the player to the players dictionary
-        players[socket.id] = init
+        // players[socket.id] = init
     
         socket.on("keyPress", function(key) {
             // TODO: Register the movement. When the key is pressed down, continually move

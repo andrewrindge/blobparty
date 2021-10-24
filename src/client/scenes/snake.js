@@ -1,59 +1,66 @@
 // this is where the actual snake game functionality will live
 // home -> snake -> restart
-// import 'phaser';
 
-let snake, food, dimension, score, speed,
-    updateDelay, direction, newDirection,
-    eaten,
-    keys, scoreTextValue, speedTextValue,
-    textStyle_Key, textStyle_Value;
+import Phaser from "phaser";
 
-let Snake = {
-    preload: function () {
-        // loading images for snake & food (squares)
+export default class Snake extends Phaser.Scene {
+    // snake: [],  // stack containing parts of the snake
+    // food: {},   // food object to be eaten
+    // dimension: 55,  // size in px of a length of a unit on grid
+    // score: 0,   // score of the game so far
+    // speed: 0,   // speed snake is traveling at
+    // updateDelay: 0,     // const to hold amount of delay
+    // direction: 'right',     // direction for the snake
+    // newDirection: null,     // next direction for the snake to go
+    // eaten: false,   // variable to track if food has been eaten yet
+    eaten;
+    snake;
+
+    constructor() {
+        super("Snake");
+        this.eaten = false;
+        this.snake = [];
+    }
+
+    init(data) {
+        this.roomKey = data.roomKey;
+        this.players = data.players;
+        this.numPlayers = data.numPlayers;
+        this.socket = data.socket;
+    }
+
+    preload () {
+        // loading images for snake & food
+        // need about a million more snake images
         // game.load.image('snake', './assets/images/snake.png');
+        // game.load.image('snakeHead', './assets/images/snakeHeadPointingRight.png');
         // game.load.image('food', './assets/images/food.png');
-    },
+    }
 
-    create: function () {
-        snake = [];     // stack containing parts of the snake
-        food = {};      // food object to be eaten
-        dimension = 15;   // size in px of a length of a unit on grid
-        score = 0;      // score of the game so far
-        speed = 0;      // speed snake is traveling at
-        updateDelay = 0;
-        direction = 'right';    // direction for the snake
-        newDirection = null;    // next direction for the snake to go
-        eaten = false;        // variable to track if food has been eaten yet
+    create () {
+        const scene = this;
 
         // Set up a Phaser controller for keyboard input.
-        keys = this.input.keyboard.createCursorKeys();
+        let keys = this.input.keyboard.createCursorKeys();
 
-        game.state.backgroundColor = '#061f27';
-
-        // creating snake stack
-        // x increases on every iteration
-        for(let i = 0; i < 10; i++) {
-            // x, y, image name
-            snake[i] = game.add.sprite(150+i*dimension, 150, 'snake');
-        }
+        // placing starting head, body, and tail of snake
+        snake[0] = game.add.sprite(357.5, 412.5, 'snakeHeadPointingRight');
+        snake[1] = game.add.sprite(302.5, 412.5, 'horizSnakeBody');
+        snake[2] = game.add.sprite(247.5, 412.5, 'tailPointingLeft');
 
         this.generateFood();
 
         // Add Text to top of game.
-        textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
-        textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
+        let textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
+        let textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
 
         // add score stat to screen
         game.add.text(30, 20, "SCORE", textStyle_Key);
-        scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
-    },
+        let scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
+    }
 
-    // createCursorKeys: function () {
-    //     // maybe this isn't a function we need?
-    // },
-
-    update: function () {
+    update () {
+         let newDirection;
         // handling key presses
         // illegal press if it is the opposite of the current direction
         if (keys.right.isDown && direction != 'left') {
@@ -67,7 +74,7 @@ let Snake = {
         }
 
         // updating game speed based on the score
-        speed = Math.min(10, Math.floor(score/5));
+        let speed = Math.min(10, Math.floor(score/5));
         // update user of speed we are at?
 
         // inc with every call
@@ -92,17 +99,17 @@ let Snake = {
             // change the direction of the tail
 
             if (direction == 'right') {
-                tail.x = head.x + 15;
+                tail.x = head.x + 55;
                 tail.y = head.y;
             } else if (direction == 'left') {
-                tail.x = head.x - 15;
+                tail.x = head.x - 55;
                 tail.y = head.y;
             } else if (direction == 'up') {
                 tail.x = head.x;
-                tail.y = head.y +  15;  // -15 ?
+                tail.y = head.y +  55;  // -15 ?
             } else if (direction == 'down') {
                 tail.x = head.x;
-                tail.y = head.y - 15;   // + 15?
+                tail.y = head.y - 55;   // + 15?
             }
 
             snake.push(tail);
@@ -123,18 +130,20 @@ let Snake = {
 
         // check if snake has collided with wall
         this.wallCollide(head);
-    },
+    }
 
-    generateFood: function () {
+    generateFood () {
         // defining randomized variables for the coordinates of the food's location
         // x can be between 0 and 585, y between 0 and 435
-        let randX = Math.floor(Math.Random() * 40) * dimension,
-            randY = Math.floor(Math.Random() * 30) * dimension;
+        let randX = Math.random() * (15 - 1) + 1;
+        let randY = Math.random() * (15 - 1) + 1;
+        let X = Math.floor(Math.Random() * 40) * dimension,
+            Y = Math.floor(Math.Random() * 30) * dimension;
 
-        food = game.add.sprite(randX, randY, 'food');
-    },
+        food = game.add.sprite(X, Y, 'food');
+    }
 
-    eatFood: function () {
+    eatFood () {
         // for each portion of the snake (necessary in case food appears inside snake)
         for (let i = 0; i < snake.length(); i++) {
             // check if part of snake overlaps with the food
@@ -151,9 +160,9 @@ let Snake = {
                 scoreTextValue.text = score.toString();
             }
         }
-    },
+    }
 
-    selfCollide : function (head) {
+    selfCollide (head) {
         // for each portion of the snake
         for (let i = 0; i < snake.length(); i++) {
             // check if the snake's head overlaps with the portion of it's body
@@ -161,9 +170,9 @@ let Snake = {
                 game.state.start('gameOver');
             }
         }
-    },
+    }
 
-    wallCollide: function (head) {
+    wallCollide (head) {
         // for each portion of the snake
         for (let i = 0; i < snake.length(); i++) {
             // check if the snake's head has hit the wall anywhere

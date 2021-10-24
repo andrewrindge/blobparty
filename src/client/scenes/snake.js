@@ -1,25 +1,36 @@
 // this is where the actual snake game functionality will live
 // home -> snake -> restart
 
-import Phaser from "phaser";
-
-export default class Snake extends Phaser.Scene {
-    // snake: [],  // stack containing parts of the snake
-    // food: {},   // food object to be eaten
-    // dimension: 55,  // size in px of a length of a unit on grid
-    // score: 0,   // score of the game so far
-    // speed: 0,   // speed snake is traveling at
-    // updateDelay: 0,     // const to hold amount of delay
-    // direction: 'right',     // direction for the snake
-    // newDirection: null,     // next direction for the snake to go
-    // eaten: false,   // variable to track if food has been eaten yet
-    eaten;
+class Snake extends Phaser.Scene {
     snake;
+    food;
+    score;
+    speed;
+    updateDelay;
+    direction;
+    eaten;
+    keys;
+    textStyleLabel;
+    textStyleData;
+    scoreTextValue;
+
 
     constructor() {
         super("Snake");
-        this.eaten = false;
-        this.snake = [];
+        this.snake = [];    // stack representing parts of snake
+        this.food = {};     // object representing food item
+        this.score = 0; // score of the game so far
+        this.speed = 0; // speed snake is traveling at
+        this.updateDelay = 0;   // const to hold amount of delay
+        this.direction = 'right';    // direction for the snake
+        this.eaten = false;  // variable to track if food has been eaten yet
+
+        this.keys = this.input.keyboard.createCursorKeys(); // Set up a Phaser controller for keyboard input.
+
+        // Add Text to top of game.
+        this.textStyleLabel = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
+        this.textStyleData = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
+        this.scoreTextValue = this.score.toString();
     }
 
     init(data) {
@@ -40,86 +51,89 @@ export default class Snake extends Phaser.Scene {
     create () {
         const scene = this;
 
-        // Set up a Phaser controller for keyboard input.
-        let keys = this.input.keyboard.createCursorKeys();
-
         // placing starting head, body, and tail of snake
-        snake[0] = game.add.sprite(357.5, 412.5, 'snakeHeadPointingRight');
-        snake[1] = game.add.sprite(302.5, 412.5, 'horizSnakeBody');
-        snake[2] = game.add.sprite(247.5, 412.5, 'tailPointingLeft');
+        this.snake[0] = Game.add.sprite(357.5, 412.5, 'snakeHeadPointingRight');
+        this.snake[1] = Game.add.sprite(302.5, 412.5, 'horizSnakeBody');
+        this.snake[2] = Game.add.sprite(247.5, 412.5, 'tailPointingLeft');
 
         this.generateFood();
 
-        // Add Text to top of game.
-        let textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
-        let textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
-
         // add score stat to screen
-        game.add.text(30, 20, "SCORE", textStyle_Key);
-        let scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
+        Game.add.text(30, 20, "SCORE", this.textStyleLabel);
+        Game.add.text(90, 18, this.scoreTextValue, this.textStyleData);
     }
 
     update () {
          let newDirection;
         // handling key presses
         // illegal press if it is the opposite of the current direction
-        if (keys.right.isDown && direction != 'left') {
+        if (this.keys.right.isDown && this.direction != 'left') {
             newDirection = 'right';
-        } else if (keys.left.isDown && direction != 'right') {
+        } else if (this.keys.left.isDown && this.direction != 'right') {
             newDirection = 'left';
-        } else if (keys.up.isDown && direction != 'down') {
+        } else if (this.keys.up.isDown && this.direction != 'down') {
             newDirection = 'up';
-        } else if (keys.down.isDown && direction != 'up') {
+        } else if (this.keys.down.isDown && this.direction != 'up') {
             newDirection = 'down';
         }
 
         // updating game speed based on the score
-        let speed = Math.min(10, Math.floor(score/5));
+        this.speed = Math.min(10, Math.floor(this.score/5));
         // update user of speed we are at?
 
         // inc with every call
-        updateDelay ++;
+        this.updateDelay ++;
 
-        if (updateDelay % (10 - speed) == 0) {
-            // assigning variables to the head and tail values
-            let head = snake[snake.length - 1],
-                tail = snake.shift(),
-                oldTailX = tail.x,
-                oldTailY = tail.y;
+        // assigning variables to the head and tail values
+        let tail = this.snake.shift();
+        let head = this.snake[this.snake.length - 1];
+
+        if (this.updateDelay % (10 - this.speed) == 0) {
 
             // if cursor chose a new direction, reassign direction
             if (newDirection) {
-                direction = newDirection;
+                this.direction = newDirection;
                 newDirection = null;
                 // put a variable here to mark the place where it turned
                 // and adjust sprites accordingly
                 // could cause problems if there are two turns and we need to keep track of both
             }
 
+            // only works with snake segments represented by blocks:
+            // instead need to implement (for direction up):
+                // let prevY = snake[0].y
+                // for (i=0; i < snake.length(); i++) {
+                //      let tempY = snake[i].y;
+                //      snake[i].y = prevY;
+                //      prevY = tempY;
+                // }
+            // and similar process for other directions
             // change the direction of the tail
-
-            if (direction == 'right') {
+            if (this.direction == 'right') {
                 tail.x = head.x + 55;
                 tail.y = head.y;
-            } else if (direction == 'left') {
+            } else if (this.direction == 'left') {
                 tail.x = head.x - 55;
                 tail.y = head.y;
-            } else if (direction == 'up') {
+            } else if (this.direction == 'up') {
                 tail.x = head.x;
-                tail.y = head.y +  55;  // -15 ?
-            } else if (direction == 'down') {
+                tail.y = head.y +  55;
+            } else if (this.direction == 'down') {
                 tail.x = head.x;
-                tail.y = head.y - 55;   // + 15?
+                tail.y = head.y - 55;
             }
+            this.snake.push(tail);
 
-            snake.push(tail);
-            head = tail;
+            // then need to track coords of turns and keep bend snake graphic
+            // constant in that place as straight snake segments change length around it
         }
 
         // stretch snake if it has eaten food
-        if (eaten) {
-            snake.unshift(game.add.sprite(tailX, tailY, 'snake'));
-            eaten = false;
+        // this only works with square blocks as snake segments
+        // need to remove tail, add a straight snake segment then reinsert the tail
+        if (this.eaten) {
+            this.snake.unshift(Game.add.sprite(tail.x, tail.y, 'snake'));
+            this.eaten = false;
         }
 
         // check if snake has eaten food
@@ -134,50 +148,50 @@ export default class Snake extends Phaser.Scene {
 
     generateFood () {
         // defining randomized variables for the coordinates of the food's location
-        // x can be between 0 and 585, y between 0 and 435
+        // x can be between 442.5 and 1157.5, y between 222.5 and 957.5
         let randX = Math.random() * (15 - 1) + 1;
         let randY = Math.random() * (15 - 1) + 1;
-        let X = Math.floor(Math.Random() * 40) * dimension,
-            Y = Math.floor(Math.Random() * 30) * dimension;
+        let X = 55 * randX - 27.5 + 415,
+            Y = 55 * randY - 27.5 + 215;
 
-        food = game.add.sprite(X, Y, 'food');
+        this.food = Game.add.sprite(X, Y, 'food');
     }
 
     eatFood () {
         // for each portion of the snake (necessary in case food appears inside snake)
-        for (let i = 0; i < snake.length(); i++) {
+        for (let i = 0; i < this.snake.length(); i++) {
             // check if part of snake overlaps with the food
-            if (snake[i].x === food.x && snake[i].y === food.y) {
+            if (this.snake[i].x === this.food.x && this.snake[i].y === this.food.y) {
                 // marking that the next time the snake moves it should grow
-                eaten = true;
+                this.eaten = true;
 
                 // remove old food and create a new one
-                food.destroy();
+                this.food.destroy();
                 this.generateFood();
 
                 // increase score & update score display
-                score++;
-                scoreTextValue.text = score.toString();
+                this.score++;
+                this.scoreTextValue.text = this.score.toString();
             }
         }
     }
 
     selfCollide (head) {
         // for each portion of the snake
-        for (let i = 0; i < snake.length(); i++) {
+        for (let i = 0; i < this.snake.length(); i++) {
             // check if the snake's head overlaps with the portion of it's body
-            if (snake[i].x === head.x && snake[i].y === head.y) {
-                game.state.start('gameOver');
+            if (this.snake[i].x === head.x && this.snake[i].y === head.y) {
+                Game.state.start('gameOver');
             }
         }
     }
 
     wallCollide (head) {
         // for each portion of the snake
-        for (let i = 0; i < snake.length(); i++) {
+        for (let i = 0; i < this.snake.length(); i++) {
             // check if the snake's head has hit the wall anywhere
-            if (head.x >= 600 || head.x <= 0 || head.y >= 450 || head.y < 0) {
-                game.state.start('gameOver');
+            if (head.x >= 442.5|| head.x <= 1157.5 || head.y >= 222.5 || head.y < 957.5) {
+                Game.state.start('gameOver');
             }
         }
     }

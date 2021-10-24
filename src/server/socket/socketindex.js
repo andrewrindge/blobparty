@@ -33,6 +33,13 @@ module.exports = (io) => {
         })
         // Adds the player to the players dictionary
         // players[socket.id] = init
+
+        socket.on("joinSnake", function(data) {
+            // Player wants to join the snake room
+
+            socket.join("snake")
+            io.to("snake").emit("joinedSnake", socket.id)
+        })
     
         socket.on("keyPress", function(key) {
             // TODO: Register the movement. When the key is pressed down, continually move

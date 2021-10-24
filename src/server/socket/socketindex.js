@@ -1,7 +1,7 @@
 const room = {
     users: [],
     gameScore: [],
-    players: new Map(),
+    players: {},
     numOfPlayers: 0
 }
 
@@ -13,7 +13,7 @@ module.exports = (io) => {
             console.log(socket.id, "Disconnected")
             delete room.players[socket.id]
 
-            io.sockets.emit("playerDisconnect", socket.id)
+            io.sockets.emit("left", socket.id)
             io.sockets.emit("players", room.players)
         })
 
@@ -24,22 +24,26 @@ module.exports = (io) => {
         init = {
             position: {
                 x: Math.random() * 400 + 100,
-                y: Math.random() * 400 + 100,
+                y: Math.random() * 200 + 100,
             }
         }
         room.players[socket.id] = init
-        io.sockets.emit("players", room.players)
-
         // Give the client the player's initial state
-        socket.emit("init", init);
+        socket.emit("init", init)
+
+        io.sockets.emit("players", room.players)
 
         // Alert everyone that a new client has joined
         io.sockets.emit("joined", {
             id: socket.id,
-            init: init
+            data: init
         })
         // Adds the player to the players dictionary
         // players[socket.id] = init
+
+        socket.on("requestPlayers", function() {
+            socket.emit("players", room.players)
+        })
 
         socket.on("joinSnake", function(data) {
             // Player wants to join the snake room

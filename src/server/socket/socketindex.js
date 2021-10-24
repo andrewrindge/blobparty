@@ -57,16 +57,13 @@ module.exports = (io) => {
             })
         })
 
-        socket.on("joinSnake", function(data) {
-            // Player wants to join the snake room
-            socket.join("snake")
-            io.to("snake").emit("joinedSnake", socket.id)
-        })
+        socket.on("chat-message", function(data) {
+            console.log(`Chat message: ${data}`)
 
-        socket.on("keyPress", function(key) {
-            // TODO: Register the movement. When the key is pressed down, continually move
-            // the player in that direction.
-            console.log(`${socket.id} pressed ${key}`)
+            io.sockets.emit("chat-message", {
+                id: socket.id,
+                message: data
+            })
         })
     });
 }

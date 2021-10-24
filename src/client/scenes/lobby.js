@@ -56,6 +56,11 @@ class Lobby extends Phaser.Scene {
             })
 
             socket.on("updatePosition", function(data) {
+                if (scene.players[data.id].text) {
+                    scene.players[data.id].text.x = scene.players[data.id].position.x
+                    scene.players[data.id].text.y = scene.players[data.id].position.y - 100
+                }
+
                 if (data.id === scene.myId) {
                     return
                 }
@@ -63,6 +68,37 @@ class Lobby extends Phaser.Scene {
                 scene.players[data.id].position = data.position
                 scene.players[data.id].sprite.x = scene.players[data.id].position.x
                 scene.players[data.id].sprite.y = scene.players[data.id].position.y
+            })
+
+            socket.on("chat-message", function(data) {
+                console.log(`Chat message ${data.message}`)
+
+                if (scene.players[data.id].text)
+                    scene.players[data.id].text.destroy(true)
+
+                scene.players[data.id].text = scene.add.text(
+                    scene.players[data.id].position.x, 
+                    scene.players[data.id].position.y - 100,
+                    data.message,
+                    {
+                        fontFamily: 'sans-serif',
+                        color: "black",
+                        boundsAlignH: "center"
+                    }
+                ).setOrigin(0.5)
+
+                if (scene.players[data.id].textTimer) {
+                    clearTimeout(scene.players[data.id].textTimer)
+                    scene.players[data.id].textTimer = null
+                }
+
+                scene.players[data.id].textTimer = setTimeout(
+                    () => {
+                        scene.players[data.id].text.destroy(true)
+                        scene.players[data.id].text = null
+                    },
+                    5000
+                )
             })
         })
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -105,7 +141,10 @@ class Lobby extends Phaser.Scene {
     }
 
     removePlayer(scene, id) {
-        scene.players[id].sprite.destroy(true);
+        if (scene.players[id].text)
+            scene.players[id].text.destroy(true)
+
+        scene.players[id].sprite.destroy(true)
 
         delete scene.players[id]
     }

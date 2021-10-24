@@ -8,6 +8,7 @@ const config = {
             gravity: { y: 0 },
         },
     },
+    parent: body,
     dom: {
         createContainer: true,
     },

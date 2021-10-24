@@ -1,11 +1,9 @@
 const room = {
-    // users: [],
-    // gameScore: [],
-    // players: {},
-    // numOfPlayers: 0
+    users: [],
+    gameScore: [],
+    players: new Set,
+    numOfPlayers: 0
 }
-
-const players = new Set()
 
 module.exports = (io) => {
     io.on("connection", (socket) => {
@@ -13,11 +11,11 @@ module.exports = (io) => {
 
         socket.on("disconnect", function(data) {
             console.log(socket.id, "Disconnected")
-            players.delete(socket.id)
+            room.players.delete(socket.id)
 
             io.sockets.emit("playerDisconnect", socket.id)
         })
-    
+
         // Initial state of the new player that just joined.
         // Maybe the color and the position can be randomized in the future
         // Properties such as which key to play as during the snake
@@ -28,13 +26,13 @@ module.exports = (io) => {
                 y: Math.random() * 400 + 100,
             }
         }
-        socket.emit("players", Array.from(players))
+        socket.emit("players", Array.from(room.players))
 
-        players.add(socket.id)
-        
+        room.players.add(socket.id)
+
         // Give the client the player's initial state
         socket.emit("init", init)
-    
+
         // Alert everyone that a new client has joined
         io.sockets.emit("joined", {
             id: socket.id,

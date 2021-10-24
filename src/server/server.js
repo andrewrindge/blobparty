@@ -2,7 +2,6 @@ const path = require("path");
 const socket = require("socket.io");
 const http = require('http');
 const express = require('express');
-const { SocketAddress } = require("net");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,7 +9,7 @@ const server = http.createServer(app);
 const io = socket(server);
 
 app.get('/', function(req, res) {
-	res.sendFile(path.join(__dirname, "..", 'client/html/index.html'));
+    res.sendFile(path.join(__dirname, "..", 'client/html/index.html'));
 });
 
 app.use(express.static(path.join(__dirname, "..", "client")));

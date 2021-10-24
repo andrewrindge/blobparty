@@ -18,7 +18,7 @@ server.listen(PORT, ()=> {
     console.log(`Server is up on port ${PORT}.`)
 });
 
-players = {}
+let players = {}
 
 io.on("connection", (socket) => {
     console.log("Made socket connection", socket.id);

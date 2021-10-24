@@ -14,13 +14,12 @@ export default class Home extends Phaser.Scene {
         // (how image will be referred to, path to image file)
 
         // background image
-        this.load.image('background', './assets/images/backgrond.png');
+        this.load.image('background', './assets/images/background.png');
         // images for arrow keys
         this.load.image('rightArrow', './assets/images/rightArrow.png');
         this.load.image('leftArrow', './assets/images/leftArrow.png');
         this.load.image('upArrow', './assets/images/upArrow.png');
         this.load.image('downArrow', './assets/images/downArrow.png');
-
     }
 
     create () {

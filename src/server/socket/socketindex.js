@@ -1,7 +1,7 @@
 const room = {
     users: [],
     gameScore: [],
-    players: {},
+    players: new Map(),
     numOfPlayers: 0
 }
 
@@ -31,7 +31,7 @@ module.exports = (io) => {
         io.sockets.emit("players", room.players)
 
         // Give the client the player's initial state
-        socket.emit("init", init)
+        socket.emit("init", init);
 
         // Alert everyone that a new client has joined
         io.sockets.emit("joined", {
@@ -43,7 +43,6 @@ module.exports = (io) => {
 
         socket.on("joinSnake", function(data) {
             // Player wants to join the snake room
-
             socket.join("snake")
             io.to("snake").emit("joinedSnake", socket.id)
         })

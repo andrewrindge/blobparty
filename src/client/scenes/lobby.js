@@ -7,12 +7,10 @@ class Lobby extends Phaser.Scene {
 
     preload() {
         this.load.image("background", "assets/lobbybackground2.png")
-        //this.load.image("blob", "assets/purpleblobstill.png")
         this.load.image("purple", "assets/purpleblobstill.png");
         this.load.image("pink", "assets/pinkblobstill.png");
         this.load.image("yellow", "assets/yellowblobstill.png");
         this.load.image("green", "assets/greenblobstill.png");
-        //this.load.spritesheet('purplesprite', "assets/purplespritesheet.png", {frameWidth: 160, frameHeight: 160});
     }
 
     create() {
@@ -77,7 +75,7 @@ class Lobby extends Phaser.Scene {
                     scene.players[data.id].text.destroy(true)
 
                 scene.players[data.id].text = scene.add.text(
-                    scene.players[data.id].position.x, 
+                    scene.players[data.id].position.x,
                     scene.players[data.id].position.y - 100,
                     data.message,
                     {
@@ -102,8 +100,6 @@ class Lobby extends Phaser.Scene {
             })
         })
         this.cursors = this.input.keyboard.createCursorKeys();
-
-        this.anims.play("left",true);
     }
 
     addPlayer(scene, id, data) {
@@ -116,6 +112,7 @@ class Lobby extends Phaser.Scene {
                     this.getTypes()
                 )
             sprite.setCollideWorldBounds(true);
+            sprite.body.bounce.setTo(1,1);
             scene.players[id].sprite = sprite;
         } else {
             const sprite = scene.add.sprite(

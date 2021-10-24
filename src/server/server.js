@@ -24,7 +24,7 @@ app.use((req, res, next) => {
     }
 });
 
-server.listen(PORT, ()=> {
+server.listen(3000, '0.0.0.0', ()=> {
     console.log(`Server is up on port ${PORT}.`)
 });
 
